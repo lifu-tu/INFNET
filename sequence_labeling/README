@@ -1,0 +1,26 @@
+# Sequence Labeling with INFNET
+
+You can get the pretained twitter embedding by excuting the command:
+
+wget http://ttic.uchicago.edu/~lifu/TE_TweeboParser/wordvects.tw100w5-m40-it2
+
+## Reference
+@inproceedings{tu-17-long,
+  title={Learning to Embed Words in Context for Syntactic Tasks},
+  author={Lifu Tu and Kevin Gimpel and Karen Livescu},
+  booktitle={Proceedings of the 2nd Workshop on Representation Learning for NLP},
+  year={2017},
+  publisher = {Association for Computational Linguistics}
+}
+
+### More Detail
+
+CRF: code for BLSTM_CRF
+adv_infnet : code for large-margin training criteria for joint training of the structured energy
+function and inference network
+
+
+
+
+
+
