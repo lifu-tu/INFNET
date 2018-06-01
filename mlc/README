@@ -1,0 +1,9 @@
+
+
+
+Kalpesh Krishna has implemented a Tensorflow version of the this project!
+Check it out at: http://github.com/theshadow29/infnet-spen
+
+
+Dependencies
+Theano = 0.8, Python = 2.7, Numpy, lasagne

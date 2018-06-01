@@ -1,0 +1,61 @@
+Seen samples:1327   
+epoches 1  trainacc 0.877585 devacc 0.854586  testacc 0.872194 trainig time 6.594374 test time 0.396742 
+Seen samples:1327   
+epoches 2  trainacc 0.907623 devacc 0.876957  testacc 0.884002 trainig time 6.718448 test time 0.397758 
+Seen samples:1327   
+epoches 3  trainacc 0.926859 devacc 0.886885  testacc 0.889711 trainig time 6.676820 test time 0.400112 
+Seen samples:1327   
+epoches 4  trainacc 0.930048 devacc 0.872204  testacc 0.874400 trainig time 6.751395 test time 0.397904 
+Seen samples:1327   
+epoches 5  trainacc 0.959418 devacc 0.887444  testacc 0.889321 trainig time 6.889034 test time 0.406272 
+Seen samples:1327   
+epoches 6  trainacc 0.973665 devacc 0.884228  testacc 0.887505 trainig time 7.284745 test time 0.417820 
+Seen samples:1327   
+epoches 7  trainacc 0.980352 devacc 0.883110  testacc 0.887505 trainig time 6.763815 test time 0.401552 
+Seen samples:1327   
+epoches 8  trainacc 0.985907 devacc 0.885347  testacc 0.887245 trainig time 6.749948 test time 0.405417 
+Seen samples:1327   
+epoches 9  trainacc 0.995217 devacc 0.890101  testacc 0.892046 trainig time 6.789567 test time 0.388566 
+Seen samples:1327   
+epoches 10  trainacc 0.998303 devacc 0.890660  testacc 0.892825 trainig time 6.702033 test time 0.396656 
+Seen samples:1327   
+epoches 11  trainacc 0.999228 devacc 0.890800  testacc 0.892435 trainig time 6.683103 test time 0.394928 
+Seen samples:1327   
+epoches 12  trainacc 0.999434 devacc 0.890240  testacc 0.892306 trainig time 6.725967 test time 0.390589 
+Seen samples:1327   
+epoches 13  trainacc 0.999537 devacc 0.891079  testacc 0.892695 trainig time 6.689437 test time 0.403702 
+Seen samples:1327   
+epoches 14  trainacc 0.999691 devacc 0.890101  testacc 0.891916 trainig time 6.695805 test time 0.391828 
+Seen samples:1327   
+epoches 15  trainacc 0.999691 devacc 0.890940  testacc 0.891916 trainig time 6.653033 test time 0.394352 
+Seen samples:1327   
+epoches 16  trainacc 0.999691 devacc 0.889961  testacc 0.891008 trainig time 6.650826 test time 0.393902 
+Seen samples:1327   
+epoches 17  trainacc 0.999743 devacc 0.890380  testacc 0.891657 trainig time 6.668818 test time 0.404264 
+Seen samples:1327   
+epoches 18  trainacc 0.999743 devacc 0.890520  testacc 0.890489 trainig time 6.721189 test time 0.395636 
+Seen samples:1327   
+epoches 19  trainacc 0.999794 devacc 0.890380  testacc 0.890359 trainig time 6.843774 test time 0.398974 
+Seen samples:1327   
+epoches 20  trainacc 0.999794 devacc 0.888423  testacc 0.890489 trainig time 6.754712 test time 0.401153 
+Seen samples:1327   
+epoches 21  trainacc 0.999794 devacc 0.888982  testacc 0.889581 trainig time 6.717641 test time 0.401429 
+Seen samples:1327   
+epoches 22  trainacc 0.999794 devacc 0.887724  testacc 0.890359 trainig time 6.715627 test time 0.398308 
+Seen samples:1327   
+epoches 23  trainacc 0.999794 devacc 0.888982  testacc 0.889970 trainig time 6.743341 test time 0.394569 
+Seen samples:1327   
+epoches 24  trainacc 0.999794 devacc 0.888003  testacc 0.890230 trainig time 6.749868 test time 0.390927 
+Seen samples:1327   
+epoches 25  trainacc 0.999794 devacc 0.887724  testacc 0.890359 trainig time 6.662214 test time 0.391743 
+Seen samples:1327   
+epoches 26  trainacc 0.999794 devacc 0.887584  testacc 0.890230 trainig time 6.685971 test time 0.390533 
+Seen samples:1327   
+epoches 27  trainacc 0.999794 devacc 0.886885  testacc 0.889711 trainig time 6.684993 test time 0.395757 
+Seen samples:1327   
+epoches 28  trainacc 0.999794 devacc 0.886326  testacc 0.890230 trainig time 6.721008 test time 0.395678 
+Seen samples:1327   
+epoches 29  trainacc 0.999794 devacc 0.887724  testacc 0.890359 trainig time 6.717682 test time 0.400785 
+Seen samples:1327   
+epoches 30  trainacc 0.999794 devacc 0.887584  testacc 0.889711 trainig time 6.708401 test time 0.389641 
+best dev acc: 0.891079  at time 12 
