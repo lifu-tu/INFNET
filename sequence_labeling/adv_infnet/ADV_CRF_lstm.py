@@ -90,7 +90,7 @@ class GAN_CRF_model(object):
                 para = pickle.load(f)
                 f.close()
                 f_params = lasagne.layers.get_all_params(l_local, trainable=True)
-		for idx, p in enumerate(f_params):
+                for idx, p in enumerate(f_params):
                         p.set_value(para[idx])
 		
                 Wyy0 = np.random.uniform(-0.02, 0.02, (26, 26)).astype('float32')
@@ -132,10 +132,7 @@ class GAN_CRF_model(object):
                 gmask = T.fmatrix()
                 y_mask = T.fmatrix()
                 length = T.iscalar()
-		#y0 = T.ftensor3()
-		# shape: n, L, 1
-		#y1 = T.ftensor3()
-		# shape: n, 1, 46
+
                 predy0 = lasagne.layers.get_output(l_local_a, {l_in_word_a:g, l_mask_word_a:gmask})
                 predy = predy0.reshape((-1, length, 25))
                 #predy = predy * gmask[:,:,None]
@@ -143,7 +140,7 @@ class GAN_CRF_model(object):
                 # n , L, 46, 46
                 # predy0: n, L, 25
 		
-		# energy loss
+                # energy loss
                 def inner_function( targets_one_step,  mask_one_step,  prev_label, tg_energy):
                         """
                         :param targets_one_step: [batch_size, t]
@@ -156,9 +153,9 @@ class GAN_CRF_model(object):
                         tg_energy_t = T.switch(mask_one_step, new_ta_energy,  tg_energy)
                         return [targets_one_step, new_ta_energy]
 
-    		# Input should be provided as (n_batch, n_time_steps, num_labels, num_labels)
-    		# but scan requires the iterable dimension to be first
-    		# So, we need to dimshuffle to (n_time_steps, n_batch, num_labels, num_labels)
+                # Input should be provided as (n_batch, n_time_steps, num_labels, num_labels)
+                # but scan requires the iterable dimension to be first
+                # So, we need to dimshuffle to (n_time_steps, n_batch, num_labels, num_labels)
                 local_energy = lasagne.layers.get_output(l_local, {l_in_word: g, l_mask_word: gmask})
                 local_energy = local_energy.reshape((-1, length, 25))
                 local_energy = local_energy*gmask[:,:,None]
@@ -173,7 +170,7 @@ class GAN_CRF_model(object):
 
                 initials = [target_time0, initial_energy0]
                 [ _, target_energies], _ = theano.scan(fn=inner_function, outputs_info=initials, sequences=[targets_shuffled[1:], masks_shuffled[1:]])
-		pos_end_target = y_in[T.arange(length_index.shape[0]), length_index]
+                pos_end_target = y_in[T.arange(length_index.shape[0]), length_index]
                 pos_cost = target_energies[-1] + T.sum(T.sum(local_energy*y_in, axis=2)*gmask, axis=1) + T.dot( pos_end_target, Wyy[:-1,-1])    
                 check = T.sum(T.sum(local_energy*y_in, axis=2)*gmask, axis=1)
                 
@@ -187,6 +184,7 @@ class GAN_CRF_model(object):
     	
                 y_f = y.flatten()
                 predy_f =  predy.reshape((-1, 25))
+
                 ce_hinge = lasagne.objectives.categorical_crossentropy(predy_f+eps, y_f)
                 ce_hinge = ce_hinge.reshape((-1, length))
                 ce_hinge = T.sum(ce_hinge* gmask, axis=1)
@@ -223,7 +221,7 @@ class GAN_CRF_model(object):
                 self.train_g = theano.function([g, gmask, y, y_in, length], [g_cost, d_cost0, pos_cost, neg_cost, delta0, check], updates=updates_g, on_unused_input='ignore')	
                 updates_d = lasagne.updates.adam(d_cost, d_params, 0.001)
                 self.train_d = theano.function([g, gmask, y,  y_in, length], [d_cost, d_cost0, pos_cost, neg_cost, delta0, check], updates=updates_d, on_unused_input='ignore')
-		# test the model and retuning the model
+                # test the model and retuning the model
 
                 predy_test = lasagne.layers.get_output(l_local_a, {l_in_word_a:g, l_mask_word_a:gmask}, deterministic=True)
                 predy_test = predy_test.reshape((-1, length, 25))		
@@ -287,7 +285,7 @@ class GAN_CRF_model(object):
                                 self.textfile.flush()
                                 self.textfile.write("Seen samples:%d   \n" %( n_samples)  )
                                 self.textfile.flush()
-			        end_time1 = time.time()
+                                end_time1 = time.time()
 	
                                 start_time2 = time.time()
                                 devacc, negscore, posscore, margin  = self.test_time1(devx0, devx0mask, devy0,  devy0_in, devmaxlen)
@@ -315,7 +313,7 @@ class GAN_CRF_model(object):
                                                         x0, x0mask, y0, y0_in, maxlen = self.prepare_data(x0, y0)
                                                         turning_cost = self.test_time_turning(x0, x0mask, y0, maxlen)
                                                         n_samples += len(train_index)
-							if (i_index%10==0): 
+                                                        if (i_index%10==0): 
                                                                 devacc  = self.test_time(devx0, devx0mask, devy0, devmaxlen)
                                                                 testacc  = self.test_time(testx0, testx0mask, testy0, testmaxlen)
                                                                 if bestdev1 < devacc:
@@ -342,3 +340,5 @@ class GAN_CRF_model(object):
                 self.textfile.write("best dev acc: %f  at time %d  after returning step best dev acc: %f  at time %d     \n" % (bestdev, best_t, bestdev1, best_t1))
                 self.textfile.flush()
                 self.textfile.close()
+
+

@@ -99,8 +99,8 @@ class base_model(object):
         cost = lasagne.objectives.categorical_crossentropy(output_1, y)	
         cost = T.mean(cost) + params.L2 * reg
 
-	final_pred = T.argmax(test_output_1, axis=1)
- 	y1 = T.ones_like(y)
+        final_pred = T.argmax(test_output_1, axis=1)
+        y1 = T.ones_like(y)
         SUM = T.sum(y1)
         acc = 1.0 * T.sum(T.eq(final_pred, y))/SUM
         self.acc_function = theano.function([g, gmask, y, idxs], acc, on_unused_input='warn')	
@@ -138,14 +138,14 @@ class base_model(object):
                     y0 = [trainy0[t] for t in train_index]
                     n_samples += len(train_index)
                     x0, x0mask, y0 = self.prepare_data(x0, y0)
-		    idx0 = self.get_idxs(x0mask) 
+                    idx0 = self.get_idxs(x0mask) 
                     traincost, trainacc = self.train_function(x0, x0mask, y0, idx0)
 		   
                 devacc = self.acc_function(devx0, devx0mask, devy0, devidx)
                 testacc = self.acc_function(testx0, testx0mask, testy0, testidx)
                 print 'Epoch ', (eidx+1), 'Cost ', traincost , 'trainacc ', trainacc, 'devacc ', devacc, 'testacc ', testacc
                 print ' '    
-	        if devacc > bestdev:
+                if devacc > bestdev:
                         bestdev = devacc
                         bestdev_time = eidx + 1	  
                         para = [p.get_value() for p in self.model_p]
@@ -161,3 +161,6 @@ class base_model(object):
         end_time = time.time()
         print "total tagger time:", (end_time - start_time)	
         print "best dev acc:", bestdev, ' at time:  ', bestdev_time    
+
+
+

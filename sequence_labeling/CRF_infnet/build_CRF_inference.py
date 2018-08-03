@@ -91,7 +91,7 @@ class CRF_model(object):
                 l_reshape_concat = lasagne.layers.ReshapeLayer(concat,(-1,2*hidden))
                 l_local = lasagne.layers.DenseLayer(l_reshape_concat, num_units= 25, nonlinearity=lasagne.nonlinearities.linear)
 
-		network_params = lasagne.layers.get_all_params(l_local, trainable=True)
+                network_params = lasagne.layers.get_all_params(l_local, trainable=True)
                 network_params.append(Wyy)
 	
                 f = open('LF_LIFU_Simple_CRF_lstm_pretrain.Batchsize_10_dropout_0_LearningRate_0.1_1e-050_emb_0.pickle','r')
@@ -100,7 +100,7 @@ class CRF_model(object):
                 for idx, p in enumerate(network_params):
                         p.set_value(data[idx])
 
-        	l_in_word_a = lasagne.layers.InputLayer((None, None))
+                l_in_word_a = lasagne.layers.InputLayer((None, None))
                 l_mask_word_a = lasagne.layers.InputLayer(shape=(None, None))
                 l_emb_word_a = lasagne_embedding_layer_2(l_in_word_a, embsize, We)
 

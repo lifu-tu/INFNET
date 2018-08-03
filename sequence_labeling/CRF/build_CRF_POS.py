@@ -85,7 +85,6 @@ class CRF_model(object):
                 else:
                         l_emb_word = lasagne_embedding_layer_2(l_in_word, embsize, We)
 
-
                 l_lstm_wordf = lasagne.layers.LSTMLayer(l_emb_word, hidden, mask_input=l_mask_word)
                 l_lstm_wordb = lasagne.layers.LSTMLayer(l_emb_word, hidden, mask_input=l_mask_word, backwards = True)
                 concat = lasagne.layers.concat([l_lstm_wordf, l_lstm_wordb], axis=2)	
@@ -100,9 +99,9 @@ class CRF_model(object):
                 length_index = T.sum(mask_var, axis=1)   
 
                 loss_train = crf_loss0(local_energy,  transition, target_var, mask_var).mean()
-        	prediction, corr = crf_accuracy0(local_energy, transition, target_var, mask_var)
-        	corr_train = (corr * mask_var).sum(dtype=theano.config.floatX)
-        	num_tokens = mask_var.sum(dtype=theano.config.floatX)
+                prediction, corr = crf_accuracy0(local_energy, transition, target_var, mask_var)
+                corr_train = (corr * mask_var).sum(dtype=theano.config.floatX)
+                num_tokens = mask_var.sum(dtype=theano.config.floatX)
 
                 network_params = lasagne.layers.get_all_params(l_local, trainable=True)
                 network_params.append(transition)
@@ -117,7 +116,7 @@ class CRF_model(object):
 		
 	def train(self, trainX, trainY, devX, devY, testX, testY, params):	
 		
-	        devx0, devx0mask, devx0mask1, devy0, devmaxlen = self.prepare_data(devX, devY)
+                devx0, devx0mask, devx0mask1, devy0, devmaxlen = self.prepare_data(devX, devY)
                 testx0, testx0mask, testx0mask1, testy0, testmaxlen = self.prepare_data(testX, testY)
                 start_time = time.time()
                 bestdev = -1
@@ -143,10 +142,10 @@ class CRF_model(object):
                                 self.textfile.flush()
                                 end_time1 = time.time()
                                 bestdev0 = 0
-	                        best_t0 = 0
+                                best_t0 = 0
                                 bestdev0_0 = 0
                                 best_t1 = 0	
-				start_time2 = time.time()
+      			        start_time2 = time.time()
 	
                                 start_time = time.time()
                                 devloss, devpred, devnum,devpredtion   = self.eval_fn(devx0, devy0, devx0mask, devx0mask1,devmaxlen)

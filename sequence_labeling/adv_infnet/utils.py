@@ -63,17 +63,16 @@ def getData(f, words, tagger):
 	    if index == -1:
 		print('file error\n')
 		return None
-	    x = i[:index-1]
-	    y = i[index+4:-1]
-	    x = x.split(' ')
+            x = i[:index-1]
+            y = i[index+4:-1]
+            x = x.split(' ')
 	    y = y.split(' ')
-            #print x
-	    #print y
-	    x = lookupwordID(words, x)
+            
+            x = lookupwordID(words, x)
             y = lookupTaggerID(tagger, y)
-	    #print y
+
             X.append(x)
-	    Y.append(y)
+            Y.append(y)
    
     return X, Y
 

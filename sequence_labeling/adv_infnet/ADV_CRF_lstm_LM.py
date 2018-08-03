@@ -98,8 +98,9 @@ class GAN_CRF_model(object):
                 l_in_word_a = lasagne.layers.InputLayer((None, None))
                 l_mask_word_a = lasagne.layers.InputLayer(shape=(None, None))
                 l_emb_word_a = lasagne_embedding_layer_2(l_in_word_a, embsize, l_emb_word.W)	
-		if params.dropout:
-			l_emb_word_a = lasagne.layers.DropoutLayer(l_emb_word_a, p=0.5)
+
+                if params.dropout:
+                           l_emb_word_a = lasagne.layers.DropoutLayer(l_emb_word_a, p=0.5)
 
                 l_lstm_wordf_a = lasagne.layers.LSTMLayer(l_emb_word_a, hidden, mask_input=l_mask_word_a)
                 l_lstm_wordb_a = lasagne.layers.LSTMLayer(l_emb_word_a, hidden, mask_input=l_mask_word_a, backwards = True)
@@ -216,8 +217,8 @@ class GAN_CRF_model(object):
 
                 neg_predy_tmp = neg_predy_lm[:,0, :].reshape((-1, 1, 26))
                 neg_tmp = T.ones_like(neg_predy_tmp)
-		
-		sos = neg_tmp*(start.dimshuffle('x', 0, 1))
+
+                sos = neg_tmp*(start.dimshuffle('x', 0, 1))
                 eos = neg_tmp*(end.dimshuffle('x', 0, 1))
                 
                 neg_y_lm_in = T.concatenate([sos, neg_predy_lm], axis=1)
@@ -236,9 +237,10 @@ class GAN_CRF_model(object):
 
                 y_f = y.flatten()
                 predy_f =  predy.reshape((-1, 25))
+
                 ce_hinge = lasagne.objectives.categorical_crossentropy(predy_f+ eps, y_f)
                 ce_hinge = ce_hinge.reshape((-1, length))
-		ce_hinge = T.sum(ce_hinge* gmask, axis=1)
+                ce_hinge = T.sum(ce_hinge* gmask, axis=1)
               
                 entropy_term = - T.sum(predy_f * T.log(predy_f + eps), axis=1)
                 entropy_term = entropy_term.reshape((-1, length))
@@ -303,7 +305,8 @@ class GAN_CRF_model(object):
 
                 words_keys = params.words.keys()
                 words_values = params.words.values()
-	        start_time = time.time()
+
+                start_time = time.time()
                 bestdev = -1
                 bestdev1 = -1
                 bestdev_time =0
@@ -335,7 +338,7 @@ class GAN_CRF_model(object):
                                 self.textfile.write("Seen samples:%d   \n" %( n_samples)  )
                                 self.textfile.flush()
                                 end_time1 = time.time()
-		                start_time2 = time.time()
+               	                start_time2 = time.time()
                                 devacc, negscore, posscore, margin  = self.test_time1(devx0, devx0mask, devy0,  devy0_in, devmaxlen)
                                 testacc = self.test_time(testx0, testx0mask, testy0, testmaxlen)
                                 end_time2 = time.time()

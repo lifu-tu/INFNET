@@ -19,7 +19,7 @@ def lookupTaggerIDX(tagger,w):
         return tagger[w]
     else:
         #print 'find UUUNKKK words',
-	print w
+        print w
         return tagger['*']
 
 def lookup_with_unk(We,words,w):
@@ -63,17 +63,15 @@ def getData(f, words, tagger):
 	    if index == -1:
 		print('file error\n')
 		return None
-	    x = i[:index-1]
-	    y = i[index+4:-1]
-	    x = x.split(' ')
-	    y = y.split(' ')
-            #print x
-	    #print y
-	    x = lookupwordID(words, x)
+            x = i[:index-1]
+            y = i[index+4:-1]
+            x = x.split(' ')
+            y = y.split(' ')
+           
+            x = lookupwordID(words, x)
             y = lookupTaggerID(tagger, y)
-	    #print y
             X.append(x)
-	    Y.append(y)
+            Y.append(y)
    
     return X, Y
 
@@ -94,8 +92,8 @@ def getSupertagData(f, words, tagger, train = True, maxlen=50):
             x = x.split(' ')
             y = y.split(' ')
 	    
-	    if (len(x) > maxlen) and train:
-		continue
+            if (len(x) > maxlen) and train:
+                continue
             x = lookupwordID(words, x)
             y = lookupTaggerID(tagger, y)
             #print y

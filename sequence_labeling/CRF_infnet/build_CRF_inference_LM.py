@@ -81,7 +81,7 @@ class CRF_model(object):
                 l_in_word = lasagne.layers.InputLayer((None, None))
                 l_mask_word = lasagne.layers.InputLayer(shape=(None, None))
 
-		if params.emb ==1:
+     	        if params.emb ==1:
                         l_emb_word = lasagne.layers.EmbeddingLayer(l_in_word,  input_size= We_initial.shape[0] , output_size = embsize, W =We)
                 else:
                         l_emb_word = lasagne_embedding_layer_2(l_in_word, embsize, We)
@@ -215,7 +215,7 @@ class CRF_model(object):
 		
         def train(self, trainX, trainY, devX, devY, testX, testY, params):	
 		
-		devx0, devx0mask, devx0mask1, devy0, devmaxlen = self.prepare_data(devX, devY)
+                devx0, devx0mask, devx0mask1, devy0, devmaxlen = self.prepare_data(devX, devY)
                 testx0, testx0mask, testx0mask1, testy0, testmaxlen = self.prepare_data(testX, testY)
                 start_time = time.time()
                 bestdev = -1
@@ -251,7 +251,7 @@ class CRF_model(object):
                                 testloss, _, testpred, testnum, _ = self.eval_fn(testx0, testy0, testx0mask, testx0mask1, testmaxlen)
                                 devacc = 1.0*devpred/devnum
                                 testacc = 1.0*testpred/testnum	
-				devlength = [len(s) for s in devX]			
+                                devlength = [len(s) for s in devX]			
                                 print  'devacc ', devacc, 'testacc ', testacc		
                                 end_time2 = time.time()
                                 if bestdev < devacc:

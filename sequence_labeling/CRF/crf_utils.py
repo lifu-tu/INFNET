@@ -50,10 +50,10 @@ def crf_loss(uniaries, energies, targets, masks):
 
     def inner_function(uniaries_one_step, energies_one_step, targets_one_step, mask_one_step, prior_partition, prev_label, tg_energy):
         """
-	:param uniaries_one_step: [batch_size, t]
+        :param uniaries_one_step: [batch_size, t]
         :param energies_one_step: [batch_size, t, t]
         :param targets_one_step: [batch_size]
-	:param mask_one_step: [batch_size]
+        :param mask_one_step: [batch_size]
         :param prior_partition: [batch_size, t]
         :param prev_label: [batch_size]
         :param tg_energy: [batch_size]
@@ -62,12 +62,12 @@ def crf_loss(uniaries, energies, targets, masks):
         """
 
         partition_shuffled = prior_partition.dimshuffle(0, 1, 'x')
-	uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
+        uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
 
         partition_t = T.switch(mask_one_step.dimshuffle(0, 'x'),
                                theano_logsumexp(energies_one_step + uniaries_one_step_shuffled + partition_shuffled, axis=1),
                                prior_partition)
-	tg_energy_t = T.switch(mask_one_step, tg_energy + uniaries_one_step[T.arange(uniaries_one_step.shape[0]), targets_one_step] + energies_one_step[T.arange(energies_one_step.shape[0]), prev_label, targets_one_step], tg_energy)		
+        tg_energy_t = T.switch(mask_one_step, tg_energy + uniaries_one_step[T.arange(uniaries_one_step.shape[0]), targets_one_step] + energies_one_step[T.arange(energies_one_step.shape[0]), prev_label, targets_one_step], tg_energy)		
 
         return [partition_t, targets_one_step, tg_energy_t]
 	#return [partition_t, targets_one_step,
@@ -125,11 +125,11 @@ def crf_accuracy( uniaries, energies, targets):
         :return:
         """
         prior_pi_shuffled = prior_pi.dimshuffle(0, 1, 'x')
-	uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
+        uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
         pi_t = T.max(prior_pi_shuffled + uniaries_one_step_shuffled + energies_one_step, axis=1)
         pointer_t = T.argmax(prior_pi_shuffled + uniaries_one_step_shuffled + energies_one_step, axis=1)
 	
-	#pi_t = T.max(prior_pi_shuffled +  energies_one_step, axis=1)
+        #pi_t = T.max(prior_pi_shuffled +  energies_one_step, axis=1)
         #pointer_t = T.argmax(prior_pi_shuffled + energies_one_step, axis=1)
 
         return [pi_t, pointer_t]
@@ -209,41 +209,30 @@ def crf_loss0( uniaries, transition, targets, masks):
         """
 
         partition_shuffled = prior_partition.dimshuffle(0, 1, 'x')
-	uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0,'x', 1)	
+        uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0,'x', 1)	
 
         partition_t = T.switch(mask_one_step.dimshuffle(0, 'x'),
                                theano_logsumexp(uniaries_one_step_shuffled + transition.dimshuffle('x', 0, 1) + partition_shuffled, axis=1),
                                prior_partition)
-	tg_energy_t = T.switch(mask_one_step, tg_energy + uniaries_one_step[ T.arange(uniaries_one_step.shape[0]), targets_one_step] + transition[prev_label, targets_one_step], tg_energy)
+        tg_energy_t = T.switch(mask_one_step, tg_energy + uniaries_one_step[ T.arange(uniaries_one_step.shape[0]), targets_one_step] + transition[prev_label, targets_one_step], tg_energy)
 
         return [partition_t, targets_one_step,tg_energy_t]
 
     # Input should be provided as (n_batch, n_time_steps, num_labels, num_labels)
     # but scan requires the iterable dimension to be first
     # So, we need to dimshuffle to (n_time_steps, n_batch, num_labels, num_labels)
-   
     uniaries_shuffled = uniaries.dimshuffle(1,0,2) 
-    ##energies_shuffled = energies.dimshuffle(1, 0, 2, 3)
     targets_shuffled = targets.dimshuffle(1, 0)
     masks_shuffled = masks.dimshuffle(1, 0)
 
     # initials should be energies_shuffles[0, :, -1, :]
-    init_label = T.cast(T.fill(uniaries[:, 0, 0], -1), 'int32')
-   
-    #aa = T.cast(T.fill(uniaries[:,0,:],0), 'float32')
-    #aa = aa.dimshuffle(0, 'x', 1) + transition.dimshuffle('x', 0, 1)
-
- 
+    init_label = T.cast(T.fill(uniaries[:, 0, 0], -1), 'int32') 
     target_time0 = targets_shuffled[0]
     uniary_time0 = uniaries_shuffled[0]
     energy_time0 = transition[-1, :-1]
 
-    #initials = [uniary_time0[:, :]+ transition[-1, :].dimshuffle('x', 0), target_time0, uniary_time0[T.arange(target_time0.shape[0]),target_time0]+ aa[T.arange(target_time0.shape[0]), init_label, target_time0]]
-
     initials = [uniary_time0[:, :] + energy_time0.dimshuffle('x', 0), target_time0, uniary_time0[T.arange(target_time0.shape[0]),target_time0]+ transition[init_label, target_time0]]
     	
-    #print (transition[-1, :].dimshuffle('x', 0)).ndim, (transition[init_label, target_time0]).ndim
-
     [partitions, _, target_energies], _ = theano.scan(fn=inner_function, outputs_info=initials,
                                                       sequences=[uniaries_shuffled[1:], targets_shuffled[1:],
                                                                  masks_shuffled[1:]], non_sequences = [transition[:-1,:-1]])
@@ -304,27 +293,16 @@ def crf_loss0_energy( uniaries, transition, targets, masks):
     # but scan requires the iterable dimension to be first
     # So, we need to dimshuffle to (n_time_steps, n_batch, num_labels, num_labels)
     uniaries_shuffled = uniaries.dimshuffle(1,0,2)
-    ##energies_shuffled = energies.dimshuffle(1, 0, 2, 3)
     targets_shuffled = targets.dimshuffle(1, 0)
     masks_shuffled = masks.dimshuffle(1, 0)
 
     # initials should be energies_shuffles[0, :, -1, :]
     init_label = T.cast(T.fill(uniaries[:, 0, 0], -1), 'int32')
-
-    #aa = T.cast(T.fill(uniaries[:,0,:],0), 'float32')
-    #aa = aa.dimshuffle(0, 'x', 1) + transition.dimshuffle('x', 0, 1)
-
-
     target_time0 = targets_shuffled[0]
     uniary_time0 = uniaries_shuffled[0]
     energy_time0 = transition[-1, :-1]
 
-    #initials = [uniary_time0[:, :]+ transition[-1, :].dimshuffle('x', 0), target_time0, uniary_time0[T.arange(target_time0.shape[0]),target_time0]+ aa[T.arange(target_time0.shape[0]), init_label, target_time0]]
-
     initials = [uniary_time0[:, :] + energy_time0.dimshuffle('x', 0), target_time0, uniary_time0[T.arange(target_time0.shape[0]),target_time0]+ transition[init_label, target_time0]]
-
-    #print (transition[-1, :].dimshuffle('x', 0)).ndim, (transition[init_label, target_time0]).ndim
-
     [partitions, _, target_energies], _ = theano.scan(fn=inner_function, outputs_info=initials,
                                                       sequences=[uniaries_shuffled[1:], targets_shuffled[1:],
                                                                  masks_shuffled[1:]], non_sequences = [transition[:-1,:-1]])
@@ -335,14 +313,6 @@ def crf_loss0_energy( uniaries, transition, targets, masks):
     return target_energy
 
    
-
-
-
-
-
-
-
-
 
 
 def crf_accuracy0(uniaries, transition, targets, masks ):
@@ -373,10 +343,10 @@ def crf_accuracy0(uniaries, transition, targets, masks ):
         :param prior_pointer: [batch_size, t]
         :return:
         """
-	uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
+        uniaries_one_step_shuffled = uniaries_one_step.dimshuffle(0, 'x', 1)
         energy_one_step_shuffled = transition0.dimshuffle('x', 0, 1)	
         prior_pi_shuffled = prior_pi.dimshuffle(0, 1, 'x')
-	mask_one_step_shuffled = mask_one_step.dimshuffle(0,'x', 'x')	
+        mask_one_step_shuffled = mask_one_step.dimshuffle(0,'x', 'x')	
 
         pi_t = T.max(prior_pi_shuffled + uniaries_one_step_shuffled + energy_one_step_shuffled*mask_one_step_shuffled, axis=1)
         pointer_t = T.argmax(prior_pi_shuffled + uniaries_one_step_shuffled + energy_one_step_shuffled*mask_one_step_shuffled , axis=1)
