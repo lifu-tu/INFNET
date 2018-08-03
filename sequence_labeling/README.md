@@ -9,7 +9,9 @@ And you can also get the processed data used in my experiments for sequence labe
 wget http://ttic.uchicago.edu/~lifu/Tweet_Pos.tar.gz
 ```
 
-# Reference
+# Reference for the pretrained embedding
+
+```
 @inproceedings{tu-17-long,
   title={Learning to Embed Words in Context for Syntactic Tasks},
   author={Lifu Tu and Kevin Gimpel and Karen Livescu},
@@ -17,6 +19,7 @@ wget http://ttic.uchicago.edu/~lifu/Tweet_Pos.tar.gz
   year={2017},
   publisher = {Association for Computational Linguistics}
 }
+```
 
 # More Detail about the three folder:
 
