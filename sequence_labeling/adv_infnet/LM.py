@@ -13,20 +13,8 @@ import sys
 import sparsemax_theano
 
 eps = 0.0000001
-"""
-o = torchfile.load('mlc-data-shuffle/bibtex/bibtex-train.torch')
-trainX = o['data']
-trainY = o['labels']
-
-o = torchfile.load('mlc-data-shuffle/bibtex/bibtex-test.torch')
-testX = o['data'].astype('float32')
-testY = o['labels'].astype('int32')
-hidden1 = 175
-hidden2 = 100
-"""
 random.seed(1)
 np.random.seed(1)
-eps = 0.0000001
 
 
 def saveParams(para, fname):
@@ -56,45 +44,37 @@ def get_minibatches_idx(n, minibatch_size, shuffle=False):
 
 
 
-
 class LM_model(object):
 
-	def prepare_data(self, seqs):
+        def prepare_data(self, seqs):
+                lengths = [len(s)+1 for s in seqs]
+                n_samples = len(seqs)
+                maxlen = np.max(lengths)
+                sumlen = sum(lengths)
+                x = np.zeros((n_samples, maxlen)).astype('int32')
+                x_out = np.zeros((n_samples, maxlen)).astype('int32')
+                x_mask = np.zeros((n_samples, maxlen)).astype(theano.config.floatX)
+                for idx, s in enumerate(seqs):
+                        x[idx,:lengths[idx]] = [45]+ s
+                        x_mask[idx,:lengths[idx]] = 1.
+                        x_out[idx, :lengths[idx]] = s + [45]
+		
+                tmp = x.flatten()
+                y = np.zeros((n_samples*maxlen, 46))
+                y[np.arange(n_samples*maxlen), tmp] = 1
+                x_start = y.reshape((n_samples, maxlen, 46)).astype('float32')
+                return x_start, x_mask ,x_out, maxlen
 
-        	lengths = [len(s)+1 for s in seqs]
-        	n_samples = len(seqs)
-        	maxlen = np.max(lengths)
-        	sumlen = sum(lengths)
-      
-        	x = np.zeros((n_samples, maxlen)).astype('int32')
-		x_out = np.zeros((n_samples, maxlen)).astype('int32')
-        	x_mask = np.zeros((n_samples, maxlen)).astype(theano.config.floatX)
-
-
-        	for idx, s in enumerate(seqs):
-                	x[idx,:lengths[idx]] = [45]+ s
-			#print [45]+ s
-                	x_mask[idx,:lengths[idx]] = 1.
-			x_out[idx, :lengths[idx]] = s + [45]
-	
-			
-		tmp = x.flatten()
-		y = np.zeros((n_samples*maxlen, 46))
-		y[np.arange(n_samples*maxlen), tmp] = 1
-		x_start = y.reshape((n_samples, maxlen, 46)).astype('float32')
-
-        	return x_start, x_mask ,x_out, maxlen
-
-	def get_idxs(self, xmask):
-        	tmp = xmask.reshape(-1,1)
-        	idxs = []
-        	for i in range(len(tmp)):
-            		if tmp[i] > 0:
-                		idxs.append(i)
-        	return np.asarray(idxs).astype('int32')
+        def get_idxs(self, xmask):
+                tmp = xmask.reshape(-1,1)
+                idxs = []
+                for i in range(len(tmp)):
+                        if tmp[i] > 0:
+                                idxs.append(i)
+                return np.asarray(idxs).astype('int32')
 	
 
-	def __init__(self,   params):
+        def __init__(self,   params):
 		self.textfile = open(params.outfile+ 'lm', 'w')
 
         	hidden = params.hiddenlm
@@ -162,20 +142,7 @@ class LM_model(object):
 		
 	def train(self, trainX, devX, params):	
 
-		#updates = lasagne.updates.adam(loss, c_params, eta)
-		#updates = lasagne.updates.apply_momentum(updates, c_params, momentum=0.9)
-		#train_function = theano.function([g1, y], [loss, acc, recall], updates=updates)
-		#test_function = theano.function([g1, y], [loss, acc, recall, f1])
-		#f = open('encoder_model.pickle')
-                #PARA = pickle.load(f)
-                #f.close()
-                #for idx, p in enumerate(self.a_params):
-                #        p.set_value(PARA[idx])		
-		devx0, devx0mask, devy0,  devmaxlen = self.prepare_data(devX)
-		#devacc  = self.test_time(devx0, devx0mask, devy00, devmaxlen)
-		#self.textfile.write("initial dev acc:%f   \n" %(devacc)  )		
-		#self.textfile.flush()
-	
+		devx0, devx0mask, devy0,  devmaxlen = self.prepare_data(devX)	
 		start_time = time.time()
         	bestdev = -1
         	bestdev_time =0
